@@ -5,7 +5,7 @@ import { updateCookie } from "../cookie/manager.js";
 import { createStream } from "../../stream/manage.js";
 import { convertLanguageCode } from "../../misc/language-codes.js";
 
-const tiktokUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+const tiktokUserAgent = process.env.TIKTOK_USER_AGENT || "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
 const shortDomain = "https://vt.tiktok.com/";
 
 export default async function(obj) {
