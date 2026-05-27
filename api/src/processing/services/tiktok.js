@@ -1,11 +1,11 @@
 import Cookie from "../cookie/cookie.js";
 
 import { extract, normalizeURL } from "../url.js";
-import { genericUserAgent } from "../../config.js";
 import { updateCookie } from "../cookie/manager.js";
 import { createStream } from "../../stream/manage.js";
 import { convertLanguageCode } from "../../misc/language-codes.js";
 
+const tiktokUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
 const shortDomain = "https://vt.tiktok.com/";
 
 export default async function(obj) {
@@ -16,7 +16,7 @@ export default async function(obj) {
         let html = await fetch(`${shortDomain}${obj.shortLink}`, {
             redirect: "manual",
             headers: {
-                "user-agent": genericUserAgent.split(' Chrome/1')[0],
+                "user-agent": tiktokUserAgent,
                 "Accept-Language": "en-US,en;q=0.5"
             }
         }).then(r => { updateCookie(cookie, r.headers); return r.text() }).catch(() => {});
@@ -35,7 +35,7 @@ export default async function(obj) {
 
     // should always be /video/, even for photos
     const fetchHeaders = {
-        "user-agent": genericUserAgent,
+        "user-agent": tiktokUserAgent,
         "Accept-Language": "en-US,en;q=0.5"
     };
     const cookieStr = cookie.toString();
