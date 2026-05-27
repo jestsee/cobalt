@@ -16,9 +16,10 @@ export default async function(obj) {
         let html = await fetch(`${shortDomain}${obj.shortLink}`, {
             redirect: "manual",
             headers: {
-                "user-agent": genericUserAgent.split(' Chrome/1')[0]
+                "user-agent": genericUserAgent.split(' Chrome/1')[0],
+                "Accept-Language": "en-US,en;q=0.5"
             }
-        }).then(r => r.text()).catch(() => {});
+        }).then(r => { updateCookie(cookie, r.headers); return r.text() }).catch(() => {});
 
         if (!html) return { error: "fetch.fail" };
 
@@ -33,11 +34,15 @@ export default async function(obj) {
     if (!postId) return { error: "fetch.short_link" };
 
     // should always be /video/, even for photos
+    const fetchHeaders = {
+        "user-agent": genericUserAgent,
+        "Accept-Language": "en-US,en;q=0.5"
+    };
+    const cookieStr = cookie.toString();
+    if (cookieStr) fetchHeaders.cookie = cookieStr;
+
     const res = await fetch(`https://www.tiktok.com/@i/video/${postId}`, {
-        headers: {
-            "user-agent": genericUserAgent,
-            cookie,
-        }
+        headers: fetchHeaders
     })
     updateCookie(cookie, res.headers);
 
