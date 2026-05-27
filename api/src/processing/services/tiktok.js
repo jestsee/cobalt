@@ -5,7 +5,10 @@ import { updateCookie } from "../cookie/manager.js";
 import { createStream } from "../../stream/manage.js";
 import { convertLanguageCode } from "../../misc/language-codes.js";
 
-const tiktokUserAgent = process.env.TIKTOK_USER_AGENT || "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+const tiktokUserAgents = (process.env.TIKTOK_USER_AGENT || "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    .split(",").map(s => s.trim()).filter(Boolean);
+
+const pickTiktokUA = () => tiktokUserAgents[Math.floor(Math.random() * tiktokUserAgents.length)];
 const shortDomain = "https://vt.tiktok.com/";
 
 export default async function(obj) {
@@ -16,7 +19,7 @@ export default async function(obj) {
         let html = await fetch(`${shortDomain}${obj.shortLink}`, {
             redirect: "manual",
             headers: {
-                "user-agent": tiktokUserAgent,
+                "user-agent": pickTiktokUA(),
                 "Accept-Language": "en-US,en;q=0.5"
             }
         }).then(r => { updateCookie(cookie, r.headers); return r.text() }).catch(() => {});
@@ -35,7 +38,7 @@ export default async function(obj) {
 
     // should always be /video/, even for photos
     const fetchHeaders = {
-        "user-agent": tiktokUserAgent,
+        "user-agent": pickTiktokUA(),
         "Accept-Language": "en-US,en;q=0.5"
     };
     const cookieStr = cookie.toString();
